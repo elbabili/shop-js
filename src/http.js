@@ -35,11 +35,3 @@ async function postData(url,options) {
     }
     return null;
 }
-
-async function postOrder(options){
-    let data = await fetch(host + "/order",options).then(function(response){
-        return response.text()
-        }).then(function (data){
-            displayOrder(JSON.parse(data));
-    })
-}
