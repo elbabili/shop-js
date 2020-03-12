@@ -1,0 +1,107 @@
+<!doctype html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title> Ma boutique en Ligne   </title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/style.css">
+    <link href="https://fonts.googleapis.com/css?family=Roboto+Mono&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <nav class="navbar navbar-inverse">
+        <div class="container-fluid">
+          <div class="navbar-header">
+            <a class="navbar-brand" href="#">Ma Boutique en Ligne</a>
+          </div>
+          <ul class="nav navbar-nav">
+            <li class="active"><a href="javascript:window.location.reload()">Home</a></li>
+          </ul>         
+        </div>
+    </nav> 
+    <div class="container">
+       
+            <div class = "col-md-3">
+                <div class="list-group" id="categories">
+                    
+                </div>
+            </div>
+            <div class="col-md-9">
+                <div class="panel panel-primary">
+                    <div class="panel-heading"> Liste des produits en Base</div>
+
+                    <div class="panel-body">
+                        <table class="table table-striped" id="tablo">
+                            <thead> 
+                                <tr>  
+                                    <th> ID </th> <th> NAME </th> <th> BRAND </th> <th> PRICE </th> <th> QUANTITE </th> 
+                                </tr> 
+                            </thead>
+                            <tbody>   </tbody>    
+                        </table>         
+                    </div>
+                </div>
+            </div>
+       
+            <div id="commande" class="col-md-6">
+                <div class="panel panel-primary">
+                    <div class="panel-heading"> Contenu de mon Caddy</div>
+
+                    <div class="panel-body">
+                        <div id="cad"  class="position">     </div>
+                        <button type="button" class="btn btn-primary"> Suivant </button>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6" id="infos">
+                <form onsubmit = "return order()">
+                    <div class="form-group">
+                        <label class="control-label">Nom : </label>
+                        <input type="text" name="name" class="form-control" id="name" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label">Adresse : </label>
+                        <input type="text" name="address" class="form-control" id="address" required>
+                    </div>  
+                    <div class="form-group">
+                        <label class="control-label">Telephone : </label>
+                        <input type="text" name="phoneNumber" class="form-control" id="phoneNumber" >
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label">Email : </label>
+                        <input type="text" name="email" class="form-control" id="email" required>
+                    </div>
+                    <input type="submit" value="Commander" class="btn btn-primary" id="btncom">
+                </form>
+            </div>
+
+            <div class="col-md-7" id="confirmer">
+                <div class="panel panel-success">
+                    <div class="panel-heading"> Confirmation de votre commande</div>
+
+                    <div class="panel-body">
+                        <div id="conf"  class="position">     </div>
+                        <button type="button" class="btn btn-success" id="pay"> Payer </button>
+                        <button type="button" class="btn btn-default" id="cancel"> Annuler </button>
+
+                        <script>
+                            // On peut aussi ajouter du code javascript ici !
+                            // ToDO : tout reste à faire ici
+                            document.getElementById("pay").addEventListener('click',payment);
+                            document.getElementById('cancel').addEventListener('click',cancel);                            
+                            function payment() { alert("Impossible de payer pour le moment !") }
+                            function cancel() { if(confirm("Souhaitez vous annuler votre commande ?")) 
+                                                    window.location.reload() }
+                        </script>
+                    </div>
+                </div>
+            </div>
+    </div>
+
+    <script src="src/jquery-3.4.1.js"></script>
+    <script src="src/http.js"></script>
+    <script src="app.js"> </script>    
+</body>
+</html>

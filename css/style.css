@@ -1,0 +1,25 @@
+body{
+    font-family: 'Roboto Mono', monospace;
+}
+
+h3{  
+    text-shadow: 3px -3px 4px #444;
+}
+
+.active {
+    font-weight: bold;
+}
+
+#com{
+    color :rgb(253, 246, 246);
+}
+
+.position{
+    width: 450px;
+    margin: 10px;
+    padding: 5px;
+}
+
+#commande,#infos,#confirmer{
+    display: none;
+}
