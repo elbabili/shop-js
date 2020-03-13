@@ -17,3 +17,22 @@ L'utilisateur doit pouvoir réaliser un certain nombre de fonctionnalités à to
 Contrainte : pas de bundler(webpack)
 
 [Lien vers l'api](https://github.com/elbabili/api-shop-node)
+
+Liste des produits en base donc accessible via l'API
+![center](/0.png)
+
+Page d'accueil
+![center](/1.png)
+
+Tous les produits d'une catégorie
+![center](/2.png)
+
+Constitution d'un panier
+![center](/3.png)
+
+Saisie des informations necessaire à la commande
+![center](/4.png)
+
+Confirmation de la commande : côté back un client a été crée puis une commande associée aussi
+![center](/5.png)
+
