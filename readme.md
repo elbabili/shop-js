@@ -14,7 +14,7 @@ L'utilisateur doit pouvoir réaliser un certain nombre de fonctionnalités à to
 
 - Passer commande revient à remplir un formulaire puis crée un client et une commande côté back  
 
-Contrainte : pas de bundler(webpack)
+Contrainte : Single page application + pas de bundler(webpack)
 
 [Lien vers l'api](https://github.com/elbabili/api-shop-node)
 
