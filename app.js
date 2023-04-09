@@ -1,68 +1,52 @@
-
 /*-----LES VARIABLES GLOBALES---------*/
-let listProduct = [];       //liste des produits
+let listArticles = [];      //liste des articles
 let listCat = [];           //liste des catégories
-let caddy = new Map();      //caddy ou panier
+let cart = new Map();       //panier
 let total = 0;              //montant total commande
+let numCommande = 0;        //numéro d'une commande
 
-//Renvoi la liste des produits contenu en base via api rest
-function getProducts(service){
-    getData(service).then(data => {
-            listProduct = [];
-            if(data != null)   data.forEach(prod => {                
-                let p = new Product(prod.id,prod.name,prod.brand,prod.price,0);
-                listProduct.push(p); 
-        });
-        displayProducts();  //une fois seulement les données reçues, on les affiche !
-        addListenTable();
-    })      
+/*--------INITIALISATION DES DATAS + AFFICHAGE SUR LA PAGE---------*/
+function initArticles(){
+    listArticles.push(new Article(1,"S8","Samung",200,0,1));
+    listArticles.push(new Article(2,"S9","Samung",250,0,1));
+    listArticles.push(new Article(3,"Iphone 10","Apple",500,0,1));
+    listArticles.push(new Article(4,"GalaxyTab","Samung",300,0,2));
+    listArticles.push(new Article(5,"EliteBook","HP",1000,0,3));
+    listArticles.push(new Article(6,"Macbook","Apple",1500,0,3));
+
+    displayArticles(listArticles);  //une fois seulement les données reçues, on les affiche !
+    addListenTable();               //association des évènements aux cellules du tableau
 }
+function initCategories() {
+    listCat.push(new Categorie(0,"All","Tous les articles"));
+    listCat.push(new Categorie(1,"SmartPhone","Téléphone mobile"));
+    listCat.push(new Categorie(2,"Tablet","Tablette tactile"));
+    listCat.push(new Categorie(3,"Pc","Ordinateur fixe ou portable"));
 
-//Renvoi la liste des catégories contenu en base 
-function getCategories(service){
-    getData(service).then(data => {
-            listCat = [];   
-            if(data != null)   data.forEach(cat => {                
-                let c = new Categorie(cat.id,cat.name,cat.description);
-                listCat.push(c); 
-        });
-        displayCategories();
-    })      
+    displayCategories();
 }
-
-//Création et affichage d'un tableau de produits
-function displayProducts() {
+//affichage de la liste des articles sur la page
+function displayArticles(listArt) {
     const tbody = document.querySelector("tbody");
     tbody.innerHTML = ' ';
-
-    if(listProduct.length > 0){
-        for (let prod of listProduct) {
+    if(listArticles.length > 0){
+        for (let art of listArt) {
             const ligne = tbody.insertRow();
-
-            let celId = ligne.insertCell();
-            celId.innerHTML = prod.getId();
-
-            let celName = ligne.insertCell();
-            celName.innerHTML = prod.getName();
-            
-            let celBrand = ligne.insertCell();
-            celBrand.innerHTML = prod.getBrand();
-
-            let celPrice = ligne.insertCell();
-            celPrice.innerHTML = prod.getPrice();
-
+            let celId = ligne.insertCell();     celId.innerHTML = art.getId();
+            let celName = ligne.insertCell();   celName.innerHTML = art.getName();
+            let celBrand = ligne.insertCell();  celBrand.innerHTML = art.getBrand();
+            let celPrice = ligne.insertCell();  celPrice.innerHTML = art.getPrice();
             let celQuantity = ligne.insertCell();
             let quantity = 0;
             let p;
-            if(caddy != null) p = caddy.get(prod.id);
+            if(cart != null) p = cart.get(art.id);
             if(p)   quantity = p.getQuantity();
             celQuantity.innerHTML = `<input class="quantity" type="number" value="` + quantity +`" min="0" max="10">`;
         } 
     }
     else danger(tbody);
 }
-
-//Création et affichage d'un tableau de catégories
+//affichage des catégories sur la page
 function displayCategories(){
     const cat = document.getElementById("categories");
     if(listCat.length > 0){        
@@ -74,63 +58,21 @@ function displayCategories(){
     else danger(cat);
 }
 
-//Vide le caddy de tous les éléments qui ont 0 articles
-function scanCaddy(){
-    caddy.forEach((p) => {
-        if(p.getQuantity() == 0)    caddy.delete(p.getId());
-    });
-}
-//Affiche le contenu de mon caddy
-function displayCaddy() {
-    let elem = document.getElementById("cad");
-    total = 0;
-    scanCaddy();
-    if(caddy != null) {
-        elem.innerHTML = '';
-        
-        caddy.forEach((p) => {        
-            elem.innerHTML += "<p>" + p.toString() + " " + "Quantité : " + p.getQuantity() + "</p>";
-            total += p.price * p.quantity;
-        });
-        elem.innerHTML += "<strong>" + "prix total de la commande : " + total + "</strong>";
-        document.getElementById("commande").style.display= "block";
-    }  
-}
-
-//A chaque rajout d'un produit on change la quantité d'un produit ou on le crée
-function changeCaddy(product) {
-    let p = caddy.get(product.id);
-
-    if (p) {
-        caddy.get(product.id).setQuantity(product.getQuantity());
-    }
-    else {
-        let newProduct = new Product(product.id, product.name, product.brand, product.price, product.quantity);
-        caddy.set(product.id, newProduct);
-    }
-}
-
 /*-----------GESTION DES EVENEMENTS DE L'APPLICATION------*/
-
-//renvoi le produit à l'indice donné
-function selectProduct(index) {
-    return listProduct[index];
-}
-//association évènements sur changement quantité d'un produit -> caddy modifié
+//association évènements sur changement quantité d'un article -> panier modifié
 function addListenTable(){
     const cells = document.getElementsByClassName("quantity");    
      for (var i = 0; i < cells.length; i++) {
         cells[i].addEventListener('change', (event) => {  
-            let index = Array.from(document.getElementsByClassName("quantity")).findIndex(e => e === event.target);
+            let index = Array.from(document.getElementsByClassName("quantity")).findIndex(e => e === event.target); //récupération de l'index de la ligne concernée
         
-            let product = selectProduct(index);
-            product.setQuantity(document.getElementsByClassName("quantity")[index].value);
-            changeCaddy(product);
-            displayCaddy();
+            let article = listArticles[index];
+            article.setQuantity(document.getElementsByClassName("quantity")[index].value);
+            addCart(article);
+            displayCart();
         });
     }
 }
-
 //association évènements sur clic bouton Suivant s'agissant d'une commande : formulaire + validation
 function addListenCde(){
     let btn = document.getElementById("commande");
@@ -140,26 +82,62 @@ function addListenCde(){
         document.getElementById("infos").style.display= "block";
     });
 } 
-//Pour infos : la même chose en jQuery
-/*$(document).ready(function(){     
-    //Dès qu'on clique sur suivant, on passe au formulaire avant commande
-    $("#commande").click(function(){
-        $("#btncom").show();
-        $("#confirmer").hide();
-        $("#infos").show();
-    });
-});*/
 
-//Affichage de tous les produits d'une catégorie
-function productsByIdCat(id){
-    getProducts("/categories/" + id + "/products");
+/*-----------GESTION DES INTERACTIONS AVEC L'UTILISATEUR----------*/
+//Vide le panier de tous les éléments qui ont 0 articles
+function scanCart() {
+    cart.forEach((p) => {
+        if(p.getQuantity() == 0)    cart.delete(p.getId());
+    });
+}
+//Affiche le contenu de mon panier
+function displayCart() {
+    let elem = document.getElementById("cad");
+    total = 0;
+    scanCart();
+    if(cart.size > 0 ) {
+        elem.innerHTML = '';
+        
+        cart.forEach((p) => {        
+            elem.innerHTML += "<p>" + p.toString() + " " + "Quantité : " + p.getQuantity() + "</p>";
+            total += p.price * p.quantity;
+        });
+        elem.innerHTML += "<strong>" + "prix total de la commande : " + total + "</strong>";
+        document.getElementById("commande").style.display= "block";
+    }  
+    else document.getElementById("commande").style.display= "none";
+}
+//A chaque rajout d'un article on change la quantité s'il existe déjà ou on le crée
+function addCart(article) {
+    let p = cart.get(article.id);
+
+    if (p) {
+        cart.get(article.id).setQuantity(article.getQuantity());
+    }
+    else {
+        let newArticle = new Article(article.id, article.name, article.brand, article.price, article.quantity);
+        cart.set(article.id, newArticle);
+    }
+}
+
+//Affichage de tous les articles d'une catégorie
+function articlesByIdCat(id){
+    listArtsById = [];
+    if(id == 0) displayArticles(listArticles);
+    else {
+            listArticles.forEach( p => {
+            if(p.getCategorie() == id) listArtsById.push(p);
+        })  
+        displayArticles(listArtsById);
+    }
+    addListenTable();
 }
 //gestion liée à l'activation d'une catégorie cliqué
-function notify(el) {
+function notify(elem) {
     resetElements();
-    el.classList.add('active');
+    elem.classList.add('active');
     listCat.forEach(c => {
-        if(c.name == el.innerHTML)  productsByIdCat(c.getId());
+        if(c.name == elem.innerHTML)  articlesByIdCat(c.getId());
     })
 }  
 function resetElements() {
@@ -170,20 +148,20 @@ function resetElements() {
 }
 
 //Affichage de la confirmation de commande
-function displayOrder(order){
+function displayOrder(){
     let elem = document.getElementById("conf");
+    let order = JSON.parse(localStorage.getItem('order'));
+
     if(order){
-        let date = new Date(order.date);
         elem.innerHTML = '';        
         elem.innerHTML += "<p>" + "<strong>" + " ID COMMANDE : " + order.id + "</strong> </p>";
-        elem.innerHTML += "<p>" + "<strong>" + " DATE : "        + date.toLocaleString() + "</strong> </p>";
-        elem.innerHTML += "<p>" + "<strong>" + " TOTAL : "       + order.total + "</strong> </p>";
-        elem.innerHTML += "<p>" + "<strong>" + " CODE CLIENT : " + order.idCust + "</strong> </p>";
+        elem.innerHTML += "<p>" + "<strong>" + " DATE : "        + order.date.toLocaleString() + "</strong> </p>";
+        elem.innerHTML += "<p>" + "<strong>" + " TOTAL : "       + order.amount + "</strong> </p>";
+        elem.innerHTML += "<p>" + "<strong>" + " NOM CLIENT : "  + order.customer.name + "</strong> </p>";
         elem.innerHTML += "<br>";
         elem.innerHTML += "RECAP DE LA COMMANDE :";
-        caddy.forEach((p) => {        
-            elem.innerHTML += "<p>" + p.toString() + " " + "Quantité : " + p.getQuantity() + "</p>";
-            total += p.price * p.quantity;
+        order.articleItems.forEach((p) => {        
+            elem.innerHTML += "<p>" + p.name + " " + "Quantité : " + p.quantity + "</p>";
         });
         document.getElementById("confirmer").style.display= "block";
         document.getElementById("btncom").style.display= "none";
@@ -194,58 +172,46 @@ function displayOrder(order){
     }
 }
 
-//En cas de pb avec le back, message d'erreur
+//passer une commande après saisi des infos sur le formulaire
+function order(){
+    if(confirm("vous êtes sur de vouloir valider la commande ?")){
+        let name = document.getElementById("name").value;
+        let address = document.getElementById("address").value;
+        let phone = document.getElementById("phoneNumber").value;
+        let email = document.getElementById("email").value;
+
+        let customer = new Customer(name,address,phone,email);
+        
+        let articleItems = [];
+        cart.forEach(p => {
+            let pi = new ArticleItem(p.getId(),p.getName(),p.getQuantity());
+            articleItems.push(pi);
+        })
+
+        //ajouter un cookie pour le numéro de la commande ou local storage
+        let order = new Order(++numCommande,new Date(),total, customer, articleItems);
+
+        localStorage.setItem('order' , JSON.stringify(order));  //stockage de la commande dans le local storage
+        cart.clear();
+        document.getElementById("commande").style.display= "none";
+        document.getElementById("infos").style.display= "none";
+
+        setTimeout( () => displayOrder(),3000);
+    }
+}
+
+//En cas de pb, message d'erreur
 //Au passage, autre manière de modifier notre page html
 function danger(elem){      //ToDo : améliorer la gestion d'une erreur
-    let msg = document.createTextNode('PROBLEM SERVEUR, REESSAYER PLUTARD');
+    let msg = document.createTextNode('PROBLEM CHARGEMENT DES DONNEES');
     elem.style.color = 'red';
     elem.append(msg);
 }
 
-//passer une commande après saisi des infos sur le formulaire
-function order(){
-    let name = document.getElementById("name").value;
-    let address = document.getElementById("address").value;
-    let phone = document.getElementById("phoneNumber").value;
-    let email = document.getElementById("email").value;
-
-    let cart = [];
-    caddy.forEach(p => {
-        let pi = new ProductItem(p.getId(),p.getName(),p.getQuantity());
-        cart.push(pi);
-    })
-
-    let order = { 
-        "name" : name, "address" : address, "phone" : phone, "email" : email, 
-        "total" : total, "cart" : cart
-    };
-
-    const options = {
-        method: 'POST',
-        json: true,
-        body: JSON.stringify(order),
-        headers: {
-            'Content-Type': 'application/json'
-        }
-    }
-    postOrder("/order",options);
-    return false;
-}
-
-//Envoi d'une requete en post permettant la création d'un client + une commande... puis affichage
-function postOrder(service,options){
-    postData(service,options).then(data =>{
-        displayOrder(JSON.parse(data));  
-    });
-}
-
-
-
-
 // Init des "composants"
 function shop() {
-    getProducts("/products");
-    getCategories("/categories");
+    initArticles();
+    initCategories();    
     addListenCde();
 }
 

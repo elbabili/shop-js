@@ -21,16 +21,15 @@
           </ul>         
         </div>
     </nav> 
-    <div class="container">
-       
+
+    <div class="container">       
             <div class = "col-md-3">
-                <div class="list-group" id="categories">
-                    
+                <div class="list-group" id="categories">                    
                 </div>
             </div>
             <div class="col-md-9">
                 <div class="panel panel-primary">
-                    <div class="panel-heading"> Liste des produits en Base</div>
+                    <div class="panel-heading"> Liste des articles en stock</div>
 
                     <div class="panel-body">
                         <table class="table table-striped" id="tablo">
@@ -47,7 +46,7 @@
        
             <div id="commande" class="col-md-6">
                 <div class="panel panel-primary">
-                    <div class="panel-heading"> Contenu de mon Caddy</div>
+                    <div class="panel-heading"> Contenu de mon Panier</div>
 
                     <div class="panel-body">
                         <div id="cad"  class="position">     </div>
@@ -56,7 +55,7 @@
                 </div>
             </div>
             <div class="col-md-6" id="infos">
-                <form onsubmit = "return order()">
+                <form onsubmit = "order()">
                     <div class="form-group">
                         <label class="control-label">Nom : </label>
                         <input type="text" name="name" class="form-control" id="name" required>
@@ -87,11 +86,10 @@
                         <button type="button" class="btn btn-default" id="cancel"> Annuler </button>
 
                         <script>
-                            // On peut aussi ajouter du code javascript ici !
-                            // ToDO : tout reste à faire ici
+                            //On peut ajouter du code ici aussi !
                             document.getElementById("pay").addEventListener('click',payment);
                             document.getElementById('cancel').addEventListener('click',cancel);                            
-                            function payment() { alert("Impossible de payer pour le moment !") }
+                            function payment() { alert("Impossible de payer pour le moment, du coup c'est gratuit :)") }
                             function cancel() { if(confirm("Souhaitez vous annuler votre commande ?")) 
                                                     window.location.reload() }
                         </script>
@@ -100,7 +98,6 @@
             </div>
     </div>
 
-    <script src="src/jquery-3.4.1.js"></script>
     <script src="src/http.js"></script>
     <script src="src/model.js"></script>
     <script src="app.js"> </script>    
