@@ -1,38 +1,13 @@
-
-Boutique en Ligne : Version 1.0
+Boutique en Ligne
 ===
 
-**Petit programme de simulation d'une boutique en ligne offrant la possibilitée donc d'inter agir avec l'utilisateur lui permettant de voir une liste de produits, accessible via une api rest, dont il pourra constituer son caddy puis passer commande**
-
-L'utilisateur doit pouvoir réaliser un certain nombre de fonctionnalités à tout moment :
-
-- voir la liste des produits avec option d'afficher les produits d'une catégorie
-
-- voir le contenu de son caddy
-
-- Ajout ou suppression de produits au caddy
-
-- Passer commande revient à remplir un formulaire puis crée un client et une commande côté back  
-
-Contrainte : Single page application + pas de bundler(webpack)
-
-[Lien vers l'api](https://github.com/elbabili/api-shop-node)
-
-Liste des produits en base donc accessible via l'API
-![center](/0.png)
-
-Page d'accueil
-![center](/1.png)
-
-Tous les produits d'une catégorie
-![center](/2.png)
-
-Constitution d'un panier
-![center](/3.png)
-
-Saisie des informations necessaire à la commande
-![center](/4.png)
-
-Confirmation de la commande : côté back un client a été crée puis une commande associée aussi
-![center](/5.png)
-
+**Boutique en ligne permettant d’afficher une liste d’articles sur une page web unique (Single Page
+Application). Et une liste de catégories d’articles de sorte qu’en cliquant sur une catégorie, 
+l’application affiche uniquement les articles correspondants. L’utilisateur doit pouvoir ensuite
+constituer un panier d’articles simplement en ajoutant et supprimant des articles, puis passer 
+commande à tout instant avec demande de confirmation. Une fois valider le panier est vidé.
+Le tout doit être ergonomique, fluide dans le respect de l’expérience utilisateur.
+Vous devez commencer par réaliser la maquette d’application en particulier si vous souhaitez 
+réaliser qqchose de différent avec les différentes étapes.
+Contexte technique : Utiliser le framework Css de votre choix, Pas de gestion de connexion ici, pas de 
+base de données ni d’api (pour l’instant)**
